@@ -1,9 +1,7 @@
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.db import models
-
 from core.models import BaseModel
-
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.urls import reverse
 
 User = get_user_model()
 
