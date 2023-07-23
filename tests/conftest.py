@@ -1,4 +1,7 @@
 import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'blogicum.settings'
+import django
+django.setup()
 import re
 import time
 from http import HTTPStatus

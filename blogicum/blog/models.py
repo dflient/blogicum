@@ -54,6 +54,7 @@ class Post(BaseModel):
         Location,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         verbose_name='Местоположение'
     )
     category = models.ForeignKey(
@@ -63,7 +64,7 @@ class Post(BaseModel):
         verbose_name='Категория'
     )
     image = models.ImageField('Изображение', upload_to='post_images', blank=True)
-    comment_count = models.IntegerField(null=True)
+    comment_count = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'публикация'
