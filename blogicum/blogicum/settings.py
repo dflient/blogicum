@@ -115,4 +115,4 @@ LOGIN_URL = 'login'
 
 CSRF_FAILURE_VIEW = 'pages.views.csrf_failure'
 
-INTERNAL_IPS = ['127.0.0.1',]
+INTERNAL_IPS = ['127.0.0.1']
