@@ -1,5 +1,4 @@
 from pathlib import Path
-import os
 from django.core.management.utils import get_random_secret_key
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,6 +115,4 @@ LOGIN_URL = 'login'
 
 CSRF_FAILURE_VIEW = 'pages.views.csrf_failure'
 
-INTERNAL_IPS = [
-'127.0.0.1',
-]
+INTERNAL_IPS = ['127.0.0.1',]

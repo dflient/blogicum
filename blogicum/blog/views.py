@@ -1,5 +1,3 @@
-import datetime as dt
-
 from django.db.models import Q
 from django.utils import timezone
 from django.urls import reverse_lazy, reverse
@@ -39,20 +37,30 @@ class EditComment(LoginRequiredMixin, UpdateView):
     def get(self, request, pk, pk2):
         comment = get_object_or_404(Comment, post_id=pk, id=pk2)
         if comment.author != request.user:
-            raise PermissionDenied('Вы не можете редактировать чужие комментарии')
+            raise PermissionDenied(
+                'Вы не можете редактировать чужие комментарии'
+            )
         form = CommentForm(instance=comment)
-        return render(request, 'blog/comment.html', {'form': form, 'comment': comment})
+        context = {
+            'form': form,
+            'comment': comment,
+        }
+        return render(request, 'blog/comment.html', context=context)
 
     def post(self, request, pk, pk2):
         comment = Comment.objects.get(post_id=pk, id=pk2)
         if comment.author != request.user:
             raise PermissionDenied
         form = CommentForm(request.POST, instance=comment)
+        context = {
+            'form': form,
+            'comment': comment,
+        }
         if form.is_valid():
             form.save()
             return redirect('blog:post_detail', pk=pk)
         else:
-            return render(request, 'blog/comment.html', {'form': form, 'comment': comment})
+            return render(request, 'blog/comment.html', context=context)
 
 
 class DeleteComment(LoginRequiredMixin, DeleteView):
@@ -61,7 +69,7 @@ class DeleteComment(LoginRequiredMixin, DeleteView):
         if comment.author != request.user:
             raise PermissionDenied('Вы не можете удалять чужие комментарии')
         return render(request, 'blog/comment.html', {'comment': comment})
-    
+
     def post(self, request, pk, pk2):
         post = get_object_or_404(Post, pk=pk)
         comment = Comment.objects.get(post_id=pk, id=pk2)
@@ -106,10 +114,13 @@ class CreatePost(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-    
+
     def get_success_url(self):
-        return reverse('blog:profile', kwargs={'username': self.request.user.username})
-    
+        return reverse(
+            'blog:profile',
+            kwargs={'username': self.request.user.username}
+        )
+
 
 class EditPost(LoginRequiredMixin, UpdateView):
     model = Post
@@ -144,14 +155,18 @@ class PostDetail(DetailView):
         if self.request.user.is_authenticated:
             return queryset.filter(
                 Q(author=self.request.user) |
-                Q(is_published=True, category__is_published=True, pub_date__lt=(timezone.now()))
+                Q(
+                    is_published=True,
+                    category__is_published=True,
+                    pub_date__lt=(timezone.now())
+                )
             )
         return queryset.filter(
             Q(is_published=True),
             Q(category__is_published=True),
             Q(pub_date__lt=(timezone.now()))
         )
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -189,7 +204,11 @@ class CategoryPosts(ListView):
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
-        context['category'] = get_object_or_404(Category, slug=category_slug, is_published=True)
+        context['category'] = get_object_or_404(
+            Category,
+            slug=category_slug,
+            is_published=True,
+            )
         return context
 
 
@@ -201,14 +220,17 @@ class Profile(DetailView):
     def get_object(self, queryset=None):
         username = self.kwargs.get('username')
         return get_object_or_404(User, username=username)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         username = self.kwargs.get('username')
-        posts = Post.objects.all().filter(author__username=username).order_by('-pub_date')
+        posts = Post.objects.all(
+            ).filter(author__username=username
+                     ).order_by('-pub_date')
         visible_posts = []
         for post in posts:
-            if post.is_published and (post.pub_date <= timezone.now()) or (self.request.user == post.author):
+            if post.is_published and (post.pub_date <= timezone.now()
+                                      ) or (self.request.user == post.author):
                 visible_posts.append(post)
         paginator = Paginator(visible_posts, 10)
         page_number = self.request.GET.get('page')
@@ -224,6 +246,8 @@ class EditProfile(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-    
+
     def get_success_url(self):
-        return reverse_lazy('blog:profile', kwargs={'username': self.request.user.username})
+        return reverse_lazy(
+            'blog:profile',
+            kwargs={'username': self.request.user.username})

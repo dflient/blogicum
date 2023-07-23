@@ -18,11 +18,13 @@ class CreateOrEditPostForm(forms.ModelForm):
         widgets = {
             'pub_date': forms.DateInput(attrs={'type': 'date'})
         }
-    
+
     def __init__(self, *args, **kwargs):
         super(CreateOrEditPostForm, self).__init__(*args, **kwargs)
-        self.fields['category'].queryset = Category.objects.filter(is_published=True)
-        self.fields['location'].queryset = Location.objects.filter(is_published=True)
+        self.fields['category'].queryset = Category.objects.filter(
+            is_published=True)
+        self.fields['location'].queryset = Location.objects.filter(
+            is_published=True)
 
 
 class CommentForm(forms.ModelForm):

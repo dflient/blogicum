@@ -63,7 +63,11 @@ class Post(BaseModel):
         null=True,
         verbose_name='Категория'
     )
-    image = models.ImageField('Изображение', upload_to='post_images', blank=True)
+    image = models.ImageField(
+        'Изображение',
+        upload_to='post_images',
+        blank=True
+        )
     comment_count = models.IntegerField(default=0)
 
     class Meta:
@@ -72,7 +76,7 @@ class Post(BaseModel):
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'pk': self.pk})
 
