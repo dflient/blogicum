@@ -9,7 +9,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import (
     ListView, CreateView, UpdateView, DeleteView, DetailView
-    )
+)
 
 from .forms import CreateOrEditPostForm, CommentForm
 from .models import Category, Post, Comment
@@ -154,8 +154,8 @@ class PostDetail(DetailView):
         queryset = super().get_queryset()
         if self.request.user.is_authenticated:
             return queryset.filter(
-                Q(author=self.request.user) |
-                Q(
+                Q(author=self.request.user)
+                | Q(
                     is_published=True,
                     category__is_published=True,
                     pub_date__lt=(timezone.now())
@@ -208,7 +208,7 @@ class CategoryPosts(ListView):
             Category,
             slug=category_slug,
             is_published=True,
-            )
+        )
         return context
 
 
@@ -225,8 +225,8 @@ class Profile(DetailView):
         context = super().get_context_data(**kwargs)
         username = self.kwargs.get('username')
         posts = Post.objects.all(
-            ).filter(author__username=username
-                     ).order_by('-pub_date')
+        ).filter(author__username=username
+                 ).order_by('-pub_date')
         visible_posts = []
         for post in posts:
             if post.is_published and (post.pub_date <= timezone.now()

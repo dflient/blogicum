@@ -67,7 +67,7 @@ class Post(BaseModel):
         'Изображение',
         upload_to='post_images',
         blank=True
-        )
+    )
     comment_count = models.IntegerField(default=0)
 
     class Meta:
