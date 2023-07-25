@@ -66,7 +66,7 @@ class Post(BaseModel):
         upload_to='post_images',
         blank=True
     )
-    comment_count = models.IntegerField(default=0)
+    comment_count = models.IntegerField('Cчётчик комментариев', default=0)
 
     class Meta:
         verbose_name = 'публикация'
@@ -96,3 +96,6 @@ class Comment(models.Model):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         ordering = ('created_at',)
+
+    def __str__(self):
+        return self.text

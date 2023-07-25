@@ -1,9 +1,6 @@
 from django import forms
-from django.contrib.auth import get_user_model
 
 from .models import Category, Comment, Location, Post
-
-User = get_user_model()
 
 
 class CreateOrEditPostForm(forms.ModelForm):
@@ -15,7 +12,10 @@ class CreateOrEditPostForm(forms.ModelForm):
             'comment_count'
         )
         widgets = {
-            'pub_date': forms.DateInput(attrs={'type': 'date'})
+            'pub_date': forms.DateTimeInput(
+                attrs={'type': 'datetime-local'},
+                format='%d-%m-%Y %H:%M:%S',
+            )
         }
 
     def __init__(self, *args, **kwargs):
