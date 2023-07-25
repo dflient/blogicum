@@ -7,9 +7,11 @@ class PostInline(admin.TabularInline):
     model = Post
     extra = 0
 
+
 class CommentInLine(admin.StackedInline):
     model = Comment
     extra = 0
+
 
 class PostAdmin(admin.ModelAdmin):
     inlines = (
@@ -38,6 +40,7 @@ class PostAdmin(admin.ModelAdmin):
         'is_published',
     )
 
+
 class CategoryAdmin(admin.ModelAdmin):
     inlines = (
         PostInline,
@@ -47,6 +50,7 @@ class CategoryAdmin(admin.ModelAdmin):
         'description',
     )
 
+
 class LocationAdmin(admin.ModelAdmin):
     inlines = (
         PostInline,
@@ -55,6 +59,7 @@ class LocationAdmin(admin.ModelAdmin):
         'name',
     )
 
+
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'text',
@@ -62,6 +67,7 @@ class CommentAdmin(admin.ModelAdmin):
         'author',
         'created_at',
     )
+
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Location, LocationAdmin)
